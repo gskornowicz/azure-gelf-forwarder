@@ -90,6 +90,24 @@ The service uses `DefaultAzureCredential`, which supports:
 
 The identity must have permission to read from Event Hub and write checkpoints to Blob Storage.
 
+Example role assignments in OpenTofu / Terraform:
+
+```terraform
+# Role assignment to allow Container App to read from Event Hub
+resource "azurerm_role_assignment" "fw_logs_eventhub_receiver" {
+  scope                = azurerm_eventhub_namespace.firewall_logs.id
+  role_definition_name = "Azure Event Hubs Data Receiver"
+  principal_id         = azurerm_container_app.logs_forwarder.identity[0].principal_id
+}
+
+# Role assignment to allow Container App to write checkpoints to Blob Storage
+resource "azurerm_role_assignment" "fw_logs_blob_contributor" {
+  scope                = azurerm_storage_account.fw_logs_checkpoints.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = azurerm_container_app.logs_forwarder.identity[0].principal_id
+}
+```
+
 ### Optional SMTP Alerting (if configured)
 
 If `SMTP_HOST`, `SMTP_FROM`, and `SMTP_TO` are set, the forwarder attaches an asynchronous email logging handler.
@@ -111,24 +129,6 @@ SMTP_PASSWORD=smtp-pass
 SMTP_USE_TLS=true
 SMTP_BATCH_INTERVAL=15
 SMTP_LOG_LEVEL=ERROR
-```
-
-Example role assignments in OpenTofu / Terraform:
-
-```terraform
-# Role assignment to allow Container App to read from Event Hub
-resource "azurerm_role_assignment" "fw_logs_eventhub_receiver" {
-  scope                = azurerm_eventhub_namespace.firewall_logs.id
-  role_definition_name = "Azure Event Hubs Data Receiver"
-  principal_id         = azurerm_container_app.logs_forwarder.identity[0].principal_id
-}
-
-# Role assignment to allow Container App to write checkpoints to Blob Storage
-resource "azurerm_role_assignment" "fw_logs_blob_contributor" {
-  scope                = azurerm_storage_account.fw_logs_checkpoints.id
-  role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = azurerm_container_app.logs_forwarder.identity[0].principal_id
-}
 ```
 
 ## Logging
