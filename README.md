@@ -1,7 +1,7 @@
 # Azure GELF Forwarder
 Universal Azure Event Hub -> Graylog GELF forwarder
 
-No need to pay $15k/yr for Graylog Enterprise and it's "Azure Event Hubs Input" to get logs from Azureo into Graylog :)
+No need to pay $15k/yr for Graylog Enterprise and it's "Azure Event Hubs Input" to get logs from Azure into Graylog :)
 
 Curerrently supports diagnostic logs from: Azure Firewall, Azure NSG Flow Logs, Azure WAF, and generic logs which won't be transformed.
 
